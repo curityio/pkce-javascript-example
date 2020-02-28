@@ -1,0 +1,25 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+<profiles xmlns="https://curity.se/ns/conf/base">
+<profile>
+  <id>token-service</id> <!-- Replace with the ID of your OAuth profile -->
+  <type xmlns:as="https://curity.se/ns/conf/profile/oauth">as:oauth-service</type>
+    <settings>
+    <authorization-server xmlns="https://curity.se/ns/conf/profile/oauth">
+    <client-store>
+    <config-backed>
+    <client>
+      <id>public-test-client</id>
+      <no-authentication>true</no-authentication>
+      <redirect-uris>http://localhost:8080/</redirect-uris> <!-- Update with your URL -->
+      <capabilities>
+        <code/>
+      </capabilities>
+      <validate-port-on-loopback-interfaces>false</validate-port-on-loopback-interfaces>
+    </client>
+    </config-backed>
+    </client-store>
+    </authorization-server>
+    </settings>
+</profile>
+</profiles>
+</config>
