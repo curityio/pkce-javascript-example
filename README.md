@@ -1,22 +1,26 @@
-# A simple JavaScript PKCE example
+# A Simple JavaScript PKCE Example
 
 ## Introduction
 
-The `OAuth Code Flow` is one of the more advanced and flexible token flows and with that also very popular. The details of this flow is not covered by this article but can be found here, [Code Flow Overview](https://curity.io/resources/develop/oauth/oauth-code-flow/index.html).
+The OAuth Code Flow is one of the more typical and flexible token flows, and, with that, one of the most popular. The details of this flow are not covered by this article, but can be found in the [code flow overview](https://curity.io/resources/develop/oauth/oauth-code-flow/index.html) article on the Curity Web site.
 
-Proof Key for Code Exchange (PKCE) is a technique described in [RFC7636](https://tools.ietf.org/html/rfc7636) that is used to mitigate the risk of the authorization code being hijacked. More details on how to configure the Curity Identity Server to enable PKCE can be found here, [Configure PKCE in Curity](https://curity.io/resources/operate/tutorials/advanced/pkce/) and further details on PKCE is available here, [Proof Key for Code Exchange (PKCE)](https://curity.io/resources/architect/oauth/oauth-pkce/).
+Proof Key for Code Exchange (PKCE) is a technique described in [RFC7636](https://tools.ietf.org/html/rfc7636), and is used to mitigate the risk of the authorization code being hijacked. More details on how to configure the Curity Identity Server to enable PKCE can be found in the [configuring PKCE in Curity](https://curity.io/resources/operate/tutorials/advanced/pkce/) resource page, and [further details on PKCE](https://curity.io/resources/architect/oauth/oauth-pkce/) can also be found on the same site.
+
+The rest of this writeup explains how these technologies can be used in the JavaScript programming language. It is intentionally simple, so that the concepts are not obscured by superfluous details.
 
 ## Configuration
 
 ### Client
-The client -- the HTML page -- needs to be configured with the client ID. By default, this is `public-test-client`. If certain scopes are desired, these should be configured as well.
+
+The client -- the HTML page -- needs to be configured with the client ID. In this example, the ID is `public-test-client`. If certain scopes are desired, these should be configured as well.
 
 ```JavaScript
 const clientId = "public-test-client";
 ```
 
-#### Creating the secret
-This function generates a random string (the secret) that is later signed before its sent to the authorization server.
+#### Creating the Verifier
+
+This function generates a random string (the verifier) that is later signed before it is sent to the authorization server, to Curity.
 
 ```JavaScript
 function generateRandomString(length) {
@@ -31,8 +35,9 @@ function generateRandomString(length) {
 }
 ```
 
-#### Signing the secret
-The Web crypto API is used to sign the key using SHA-256
+#### Signing the Verifier
+
+The Web crypto API is used to sign the verifier using SHA-256. This transformed version is called the code challenge.
 
 ```JavaScript
 async function generateCodeChallenge(codeVerifier) {
@@ -44,15 +49,17 @@ async function generateCodeChallenge(codeVerifier) {
 }
 ```
 
-#### Storing the key
-Store the signed key between requests (using session storage)
+#### Storing the Verifier
+
+Store the verification key between requests (using session storage).
 
 ```JavaScript
 window.sessionStorage.setItem("code_verifier", codeVerifier);
 ```
 
-#### Sending the key with the authorization requests
-The signed secret (codeChallenge) is passed to the authorization server as part of the authorization request. The method (`S256` in our case) used for signing the secret is also passed with the request.
+#### Sending the Code Challenge in the Authorization Request
+
+The code challenge (the transformed, temporary verification secret) is passed to the authorization server as part of the authorization request. The method (`S256`, in our case) used to transform the secret is also passed with the request.
 
 ```JavaScript
 var redirectUri = window.location.href.split('?')[0];
@@ -66,8 +73,10 @@ var args = new URLSearchParams({
 window.location = authorizeEndpoint + "/?" + args;
 ```
 
-#### Call the token endpoint with the code and key
-The authorization code is passed in the POST request to the token endpoint along with the secret key (retrieved from the session storage).
+#### Call the Token Endpoint with the Code and Verifier
+
+The authorization code is passed in the POST request to the token endpoint along with the secret verifier key (retrieved from the session storage).
+
 ```JavaScript
 xhr.responseType = 'json';
 xhr.open("POST", tokenEndpoint, true);
@@ -82,6 +91,7 @@ xhr.send(new URLSearchParams({
 ```
 
 ### OAuth Server
+
 The OAuth server needs to be configured with a client that matches the one configured [above](#Client). Also, the redirect should be set. When using `npx` (described below), this will be `http://localhost:8080` by default if no port is provided. Additionally, scopes may be configured.
 
 This can be created in the Curity Identity Server by merging this XML with the current configuration:
@@ -114,7 +124,7 @@ This can be created in the Curity Identity Server by merging this XML with the c
 </config>
 ```
 
-## Serving the file
+## Serving the Sample HTML File
 
 The HTML needs to be served somehow from a Web server. Because the client is just a static HTML page, this can be done with a trivial server configuration. These are a couple of different ways to very easily server the static HTML page:
 
@@ -131,3 +141,16 @@ $ python -m SimpleHTTPServer <port>
 ```
 
 These will not use TLS, but are fast and easy ways to serve the HTML file without setting up any infrastructure.
+
+## License
+
+The code and samples in this repository are licensed under the [Apache 2 license](LICENSE).
+
+## Questions
+
+For questions and comments, contact Curity AB:
+
+> info@curity.io
+> https://curity.io
+
+Copyright (C) 2020 Curity AB.
