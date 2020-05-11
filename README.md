@@ -1,5 +1,8 @@
 # A Simple JavaScript PKCE Example
 
+[![Quality](https://curity.io/assets/images/badges/pkce-javascript-example-quality.svg)](https://curity.io/resources/code-examples/status/)
+[![Availability](https://curity.io/assets/images/badges/pkce-javascript-example-availability.svg)](https://curity.io/resources/code-examples/status/)
+
 ## Introduction
 
 The OAuth Code Flow is one of the more typical and flexible token flows, and, with that, one of the most popular. The details of this flow are not covered by this article, but can be found in the [code flow overview](https://curity.io/resources/develop/oauth/oauth-code-flow/index.html) article on the Curity Web site.
