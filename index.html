@@ -82,6 +82,9 @@
 
             return text;
         }
+        if (!crypto.subtle) {
+            document.writeln('<p><b>ERROR:</b> Javascript crypto services require that this site be served in a <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts">secure context</a>; either from <b>(*.)localhost</b> or via <b>https</b>. <p> Either add a /etc/hosts entry like "127.0.0.1 public-test-client.localhost" and reload the site from there OR enable SSL using something like <a href="https://letsencrypt.org/">letsencypt</a> OR refer to this <a href="https://stackoverflow.com/questions/46468104/how-to-use-subtlecrypto-in-chrome-window-crypto-subtle-is-undefined">stackoverflow article</a> for more alternatives. <p>If Javascript crypto is available this error message will disappear.')
+        }
     </script>
   </body>
 </html>
