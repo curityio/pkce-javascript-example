@@ -38,9 +38,9 @@ function generateRandomString(length) {
 }
 ```
 
-#### Signing the Verifier
+#### Hashing the Verifier
 
-The Web crypto API is used to sign the verifier using SHA-256. This transformed version is called the code challenge.
+The Web crypto API is used to hash the verifier using SHA-256. This transformed version is called the code challenge.
 
 ```JavaScript
 async function generateCodeChallenge(codeVerifier) {
@@ -51,6 +51,12 @@ async function generateCodeChallenge(codeVerifier) {
     .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
 }
 ```
+
+Note that Javascript crypto services require that the `index.html` is served in a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts) — either from **(*.)localhost** or via **HTTPS**.
+You can add an `/etc/hosts` entry like `127.0.0.1 public-test-client.localhost` and load the site from there, enable SSL using something like [letsencrypt](https://letsencrypt.org/), or refer to this [stackoverflow article](https://stackoverflow.com/questions/46468104/how-to-use-subtlecrypto-in-chrome-window-crypto-subtle-is-undefined) for more alternatives.
+
+If Javascript crypto is not available the script will fall back to using a plain-text code challenge.
+
 
 #### Storing the Verifier
 
