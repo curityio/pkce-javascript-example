@@ -5,9 +5,9 @@
 
 ## Introduction
 
-The OAuth Code Flow is one of the more typical and flexible token flows, and, with that, one of the most popular. The details of this flow are not covered by this article, but can be found in the [code flow overview](https://curity.io/resources/develop/oauth/oauth-code-flow/index.html) article on the Curity Web site.
+The OAuth Code Flow is one of the more typical and flexible token flows, and, with that, one of the most popular. The details of this flow are not covered by this article, but can be found in the [code flow overview](https://curity.io/resources/learn/oauth-code-flow) article on the Curity Web site.
 
-Proof Key for Code Exchange (PKCE) is a technique described in [RFC7636](https://tools.ietf.org/html/rfc7636), and is used to mitigate the risk of the authorization code being hijacked. More details on how to configure the Curity Identity Server to enable PKCE can be found in the [configuring PKCE in Curity](https://curity.io/resources/operate/tutorials/advanced/pkce/) resource page, and [further details on PKCE](https://curity.io/resources/architect/oauth/oauth-pkce/) can also be found on the same site.
+Proof Key for Code Exchange (PKCE) is a technique described in [RFC7636](https://www.rfc-editor.org/rfc/rfc7636), and is used to mitigate the risk of the authorization code being hijacked. More details on how to configure the Curity Identity Server to enable PKCE can be found in the [configuring PKCE](https://curity.io/resources/learn/pkce/) tutorial, and [further details on PKCE](https://curity.io/resources/learn/oauth-pkce/) can also be found on the same site.
 
 The rest of this writeup explains how these technologies can be used in the JavaScript programming language. It is intentionally simple, so that the concepts are not obscured by superfluous details.
 
@@ -53,7 +53,10 @@ async function generateCodeChallenge(codeVerifier) {
 ```
 
 Note that Javascript crypto services require that the `index.html` is served in a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts) — either from **(*.)localhost** or via **HTTPS**.
-You can add an `/etc/hosts` entry like `127.0.0.1 public-test-client.localhost` and load the site from there, enable SSL using something like [letsencrypt](https://letsencrypt.org/), or refer to this [stackoverflow article](https://stackoverflow.com/questions/46468104/how-to-use-subtlecrypto-in-chrome-window-crypto-subtle-is-undefined) for more alternatives.
+To enable secure context do one of the following:
+- add an `/etc/hosts` entry like `127.0.0.1 public-test-client.localhost` and load the site from there, or
+- enable SSL using something like [letsencrypt](https://letsencrypt.org/), or
+- refer to this [stackoverflow article](https://stackoverflow.com/questions/46468104/how-to-use-subtlecrypto-in-chrome-window-crypto-subtle-is-undefined) for more alternatives.
 
 If Javascript crypto is not available the script will fall back to using a plain-text code challenge.
 
@@ -135,7 +138,7 @@ This can be created in the Curity Identity Server by merging this XML with the c
 
 ## Serving the Sample HTML File
 
-The HTML needs to be served somehow from a Web server. Because the client is just a static HTML page, this can be done with a trivial server configuration. These are a couple of different ways to very easily server the static HTML page:
+The HTML needs to be served somehow from a Web server. Because the client is just a static HTML page, this can be done with a trivial server configuration. Below are a couple of ways to easily serve the static HTML page:
 
 ```sh
 $ npx http-server -p <port>
